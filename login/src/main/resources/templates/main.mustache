@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>메인 페이지</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 60px;
+        }
+
+        h1 {
+            color: #2c3e50;
+        }
+
+        .welcome {
+            margin-bottom: 30px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        form {
+            display: inline;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 15px;
+            border: none;
+            background-color: #3498db;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+<h1>로그인 성공!</h1>
+<p class="welcome">환영합니다, <strong>{{id}}</strong>님 👋</p>
+
+<div class="button-group">
+    <form action="/logout" method="post">
+        <button type="submit">로그아웃</button>
+    </form>
+
+    <form action="/articles/new" method="get">
+        <button type="submit">글쓰기</button>
+    </form>
+
+    <form action="/articles" method="get">
+        <button type="submit">글 목록</button>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>오류 발생</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 80px;
+        }
+
+        h1 {
+            color: #e74c3c;
+            font-size: 28px;
+        }
+
+        p {
+            font-size: 18px;
+            margin-top: 20px;
+            color: #555;
+        }
+
+        .button {
+            margin-top: 30px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+<h1>⚠ 오류가 발생했습니다</h1>
+
+{{#errorMessage}}
+    <p>{{errorMessage}}</p>
+{{/errorMessage}}
+
+{{^errorMessage}}
+    <p>예상치 못한 오류가 발생했습니다. 나중에 다시 시도해주세요.</p>
+{{/errorMessage}}
+
+<form action="/main" method="get">
+    <button class="button" type="submit">메인으로 돌아가기</button>
+</form>
+</body>
+</html>
