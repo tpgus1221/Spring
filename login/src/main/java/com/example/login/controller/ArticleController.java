@@ -1,7 +1,7 @@
 package com.example.login.controller;
 
 import com.example.login.dto.ArticleForm;
-import com.example.login.entity.Article;
+import com.example.login.dto.CommentForm;
 import com.example.login.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,11 +53,13 @@ public class ArticleController {
         ArticleForm articleForm = articleService.findById(id);
         String loginId = (String) session.getAttribute("id");
         String articleId = articleForm.getAuthor();
+        List<CommentForm> comments = articleService.getCommentsForArticle(id);
 
         model.addAttribute("title", articleForm.getTitle());
         model.addAttribute("content", articleForm.getContent());
         model.addAttribute("author", articleForm.getAuthor());
         model.addAttribute("articleId", articleForm.getId());
+        model.addAttribute("comments", comments);
         model.addAttribute("isAuthor", articleService.isAuthor(loginId, articleId));
         return "detail";
     }
