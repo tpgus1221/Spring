@@ -1,7 +1,10 @@
 package com.example.login.controller;
 
 import com.example.login.dto.ArticleForm;
+import com.example.login.dto.ArticleReturn;
 import com.example.login.dto.CommentForm;
+import com.example.login.dto.CommentReturn;
+import com.example.login.entity.Article;
 import com.example.login.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,7 +45,7 @@ public class ArticleController {
     @GetMapping("/articles")
     public String showArticles(Model model){
         //글 목록 전부 나열
-        List<ArticleForm> articleList = articleService.findAll();
+        List<ArticleReturn> articleList = articleService.findAll();
         model.addAttribute("articles", articleList);
         return "list";
     }
@@ -50,26 +53,26 @@ public class ArticleController {
     @GetMapping("/articles/{id}")
     public String showDetail(@PathVariable Long id, Model model, HttpSession session){
         //클릭된 글의 세부 내용 표시
-        ArticleForm articleForm = articleService.findById(id);
         String loginId = (String) session.getAttribute("id");
-        String articleId = articleForm.getAuthor();
-        List<CommentForm> comments = articleService.getCommentsForArticle(id);
+        ArticleReturn articleReturn = articleService.findById(id, loginId);
+        //List<CommentReturn> comments = articleService.getCommentsForArticle(id, loginId);
 
-        model.addAttribute("title", articleForm.getTitle());
-        model.addAttribute("content", articleForm.getContent());
-        model.addAttribute("author", articleForm.getAuthor());
-        model.addAttribute("articleId", articleForm.getId());
-        model.addAttribute("comments", comments);
-        model.addAttribute("isAuthor", articleService.isAuthor(loginId, articleId));
+        model.addAttribute("title", articleReturn.getTitle());
+        model.addAttribute("content", articleReturn.getContent());
+        model.addAttribute("author", articleReturn.getAuthor());
+        model.addAttribute("articleId", articleReturn.getId());
+        model.addAttribute("comments", articleReturn.getComments());//dto의 comments로 대체
+        model.addAttribute("isAuthor", articleReturn.isIsauthor());
         return "detail";
     }
     @GetMapping("/articles/{id}/edit")
-    public String editArticles(@PathVariable Long id, Model model){
+    public String editArticles(@PathVariable Long id, Model model, HttpSession session){
         //수정버튼 클릭 시 수정화면 보여주기
-        ArticleForm articleForm = articleService.findById(id);
-        model.addAttribute("id", articleForm.getId());
-        model.addAttribute("title", articleForm.getTitle());
-        model.addAttribute("content", articleForm.getContent());
+        String loginId = (String) session.getAttribute("id");
+        ArticleReturn articleReturn = articleService.findById(id, loginId);
+        model.addAttribute("id", articleReturn.getId());
+        model.addAttribute("title", articleReturn.getTitle());
+        model.addAttribute("content", articleReturn.getContent());
 
         return "edit";
     }

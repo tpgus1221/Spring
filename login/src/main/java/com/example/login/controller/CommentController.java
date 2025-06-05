@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class CommentController {
@@ -15,27 +16,35 @@ public class CommentController {
     private ArticleService articleService;
 
     @PostMapping("articles/{id}/comments")
-    public String addComments(@PathVariable("id") Long articleId, CommentForm commentForm, HttpSession session){
+    public String addComments(@PathVariable("id") Long articleId,
+                              CommentForm commentForm,
+                              HttpSession session){
         String loginId = (String) session.getAttribute("id");
         commentForm.setAuthor(loginId);
         commentForm.setArticleId(articleId);
-        articleService.addComments(articleId,loginId,commentForm);
+        articleService.addComments(commentForm);
         return "redirect:/articles/" + articleId;
     }
 
-    @PostMapping("/comments/{id}/edit")
-    public String editComments(@PathVariable("id") Long commentId, CommentForm commentForm){
-
-        articleService.updateComments(commentForm.getArticleId(), commentId, commentForm);
-        return "redirect:/articles/" + commentForm.getArticleId();
-    }
-
-
-    @PostMapping("/comments/{id}/delete")
-    public String deleteComment(@PathVariable("id") Long commentId, CommentForm commentForm){
-        articleService.deleteComments(commentId);
-        Long  articleId = commentForm.getArticleId();
+    @PostMapping("articles/{articleId}/comments/{commentId}/edit")
+    public String editComments(@PathVariable Long articleId,
+                               @PathVariable Long commentId,
+                               CommentForm commentForm,
+                               HttpSession session){
+        String loginId = (String) session.getAttribute("id");
+        commentForm.setCommentId(commentId);
+        articleService.updateComments(articleId, commentId, commentForm, loginId);
         return "redirect:/articles/" + articleId;
     }
+
+
+    @PostMapping("articles/{articleId}/comments/{commentId}/delete")
+    public String deleteComment(@PathVariable Long articleId,
+                                @PathVariable Long commentId){
+        articleService.deleteComments(articleId, commentId);
+        return "redirect:/articles/" + articleId;
+    }
+
+
 }
 

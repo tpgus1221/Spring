@@ -1,6 +1,7 @@
 package com.example.login.controller;
 
 import com.example.login.dto.SignUpForm;
+import com.example.login.dto.SignUpReturn;
 import com.example.login.service.SignUpService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,8 +24,15 @@ public class SignUpController {
 
     @PostMapping("/signup")
     public String signUp(SignUpForm signUpForm, Model model){
-        String result = signUpService.insertUser(signUpForm);
-
+        SignUpReturn signUpReturn = signUpService.insertUser(signUpForm);
+        String result;
+        if (signUpReturn.isIsnull()){
+            result = "아이디를 입력해주세요.";
+        }else if (signUpReturn.isIsdupl()){
+            result = "이미 등록된 아이디입니다.";
+        }else{
+            result = "회원가입 성공";
+        }
         model.addAttribute("result", result);//결과 메시지 출력
         return "login";
 
